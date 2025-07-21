@@ -19,7 +19,15 @@ def fetch_arxiv_papers(query: str, max_results: int = 10):
             result.download_pdf(filename=tmp.name)
             tmp.flush()
             loader = PyPDFLoader(tmp.name)
-            docs.extend(loader.load())
+            loaded_docs = loader.load()
+            for doc in loaded_docs:
+                doc.metadata.update({
+                    "source": f"https://arxiv.org/abs/{result.entry_id.split('/')[-1]}",
+                    "title": result.title,
+                    "authors": [author.name for author in result.authors],
+                    "published": result.published.isoformat()
+                })
+                docs.append(doc)
     return docs
 
 def split_documents(documents):
