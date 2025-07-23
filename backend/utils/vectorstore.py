@@ -1,9 +1,9 @@
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
-from backend.utils.config import HUGGINGFACE_EMBEDDING_MODEL
+from backend.utils.config import HUGGINGFACE_EMBEDDING_MODEL, ARXIV_MAX_RESULTS, ARXIV_QUERY
 from backend.utils.loaders import fetch_arxiv_papers, split_documents
 
-def build_retriever(query: str = "interpretability AND transformer", max_results: int = 10):
+def build_retriever(query: str = ARXIV_QUERY, max_results: int = ARXIV_MAX_RESULTS):
     papers = fetch_arxiv_papers(query, max_results)
     assert papers, "⚠️ No papers loaded from arXiv."
 

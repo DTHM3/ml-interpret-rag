@@ -3,7 +3,7 @@ from langchain_community.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from backend.utils.config import CHUNK_SIZE, CHUNK_OVERLAP
 
-def fetch_arxiv_papers(query: str, max_results: int = 10):
+def fetch_arxiv_papers(query: str, max_results: int):
     """
     Fetches arXiv papers based on a query and returns them as a list of documents.
     """

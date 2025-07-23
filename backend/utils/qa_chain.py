@@ -2,7 +2,7 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import PromptTemplate
 from langchain.schema.runnable import RunnableMap, RunnablePassthrough
 
-def get_qa_chain(retriever, model_name: str = "gemini-1.5-flash", temperature: float = 0.0):
+def get_qa_chain(retriever, model_name: str = "gemini-2.5-flash", temperature: float = 0.0):
     """
     Creates a question-answering chain using the specified retriever and model.
     
