@@ -1,7 +1,11 @@
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from contextlib import asynccontextmanager
+import os
+
 from backend.utils.vectorstore import build_retriever
 from backend.utils.qa_chain import get_qa_chain
 
@@ -22,31 +26,24 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
-# Add CORS middleware
-origins = [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-]
-
+# ✅ CORS (not strictly needed now, but harmless here)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # Allow all origins for development
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
+# ✅ API route — defined before static mount
 @app.post("/query")
 def query(request_body: Question, request: Request):
     retriever = request.app.state.retriever
     qa_chain = request.app.state.qa_chain
 
     question_text = request_body.query
-
     answer = qa_chain.invoke(question_text)
-    retrieved_docs = retriever.get_relevant_documents(question_text)
+    retrieved_docs = retriever.invoke(question_text)
 
     unique_sources = {}
     for doc in retrieved_docs:
@@ -58,10 +55,10 @@ def query(request_body: Question, request: Request):
                 "source": key,
             }
 
-    # Build enriched sources
-    sources = list(unique_sources.values())
-
     return {
         "answer": answer.content,
-        "sources": sources
+        "sources": list(unique_sources.values())
     }
+
+# ✅ Serve static frontend at the very end
+app.mount("/", StaticFiles(directory="static", html=True), name="static")

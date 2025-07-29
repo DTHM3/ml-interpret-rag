@@ -3,7 +3,7 @@ import type { FormEvent } from "react";
 import axios from "axios";
 import "./App.css";
 
-const API_URL =  "http://127.0.0.1:8000"
+// Removed hardcoded API_URL — use relative path instead
 
 interface ResponseData {
   answer: string;
@@ -30,7 +30,7 @@ function App() {
 
     try {
       const res = await axios.post<ResponseData>(
-        `${API_URL}/query`,
+        "/query",  // relative path works when frontend + backend served together
         { query: question },
         { headers: { "Content-Type": "application/json" } }
       );
@@ -38,6 +38,7 @@ function App() {
       setAnswer(res.data.answer);
       setSources(res.data.sources);
     } catch (err) {
+      console.error(err);
       setAnswer("Error fetching answer.");
     } finally {
       setLoading(false);
@@ -65,27 +66,25 @@ function App() {
           <h3>Answer:</h3>
           <p>{answer}</p>
           {sources.length > 0 && (
-          <div>
-            <h4>Sources:</h4>
-            <ul>
-              {sources.map((src, idx) => (
-                <li key={idx}>
-                  <strong>{src.title}</strong><br />
-                  <em>by {src.authors.join(", ")}</em><br />
-                  <a href={src.source} target="_blank" rel="noopener noreferrer">
-                    {src.source}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+            <div>
+              <h4>Sources:</h4>
+              <ul>
+                {sources.map((src, idx) => (
+                  <li key={idx}>
+                    <strong>{src.title}</strong><br />
+                    <em>by {src.authors.join(", ")}</em><br />
+                    <a href={src.source} target="_blank" rel="noopener noreferrer">
+                      {src.source}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       )}
     </div>
   );
 }
+
 export default App;
-
-
-  

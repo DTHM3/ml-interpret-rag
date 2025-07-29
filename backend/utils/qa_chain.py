@@ -1,6 +1,6 @@
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import PromptTemplate
-from langchain.schema.runnable import RunnableMap, RunnablePassthrough
+from langchain.schema.runnable import RunnablePassthrough
 
 def get_qa_chain(retriever, model_name: str = "gemini-2.5-flash", temperature: float = 0.0):
     """
