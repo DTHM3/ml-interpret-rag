@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import type { FormEvent } from "react";
+import ReactMarkdown from "react-markdown";
 import axios from "axios";
 import "./App.css";
 
@@ -100,7 +101,11 @@ function App() {
           {answer && (
             <div className="mt-8 bg-gray-800 p-6 rounded-xl shadow-lg">
               <h2 className="text-xl font-semibold mb-2">Answer</h2>
-              <p className="text-gray-300 mb-4 whitespace-pre-line">{answer}</p>
+              <div className="prose prose-invert text-gray-300 mb-4">
+                <ReactMarkdown>
+                  {answer}
+                </ReactMarkdown>
+              </div>
 
               {sources.length > 0 && (
                 <div>
