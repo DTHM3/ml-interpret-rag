@@ -2,3 +2,6 @@
 .venv/
 # Environment variables file
 .env
+
+# K8s secret files
+k8s/secret.yaml
