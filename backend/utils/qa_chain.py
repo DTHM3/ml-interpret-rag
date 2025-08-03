@@ -1,8 +1,12 @@
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import PromptTemplate
-from langchain.schema.runnable import RunnableMap, RunnablePassthrough
+from langchain.schema.runnable import RunnablePassthrough
 
-def get_qa_chain(retriever, model_name: str = "gemini-1.5-flash", temperature: float = 0.0):
+from backend.utils.logging_utils import setup_logger
+
+logger = setup_logger(__name__)
+
+def get_qa_chain(retriever, model_name: str = "gemini-2.5-flash", temperature: float = 0.0):
     """
     Creates a question-answering chain using the specified retriever and model.
     
@@ -14,12 +18,14 @@ def get_qa_chain(retriever, model_name: str = "gemini-1.5-flash", temperature: f
     Returns:
         RetrievalQA: The question-answering chain.
     """
+    logger.info(f"🔄 Creating QA chain with model: {model_name} (temperature={temperature})")
+
     llm = ChatGoogleGenerativeAI(model=model_name, temperature=temperature)
     
     prompt = PromptTemplate(
         input_variables=["context", "question"],
         template="""
-            You are an expert in ML interpretability. Given the following context from academic papers, answer the question concisely.
+            You are an expert in ML interpretability. Given the following context from academic papers, answer the question.
 
             Context:
             {context}
@@ -30,10 +36,13 @@ def get_qa_chain(retriever, model_name: str = "gemini-1.5-flash", temperature: f
             Answer:""",
     )
 
+    logger.debug(f"📝 Prompt template:\n{prompt.template.strip()}")
+
     chain = (
         {'context': retriever, 'question': RunnablePassthrough()}
         | prompt
         | llm
     )
-    
+
+    logger.info(f"✅ QA chain created using {llm.__class__.__name__}")
     return chain
