@@ -46,7 +46,9 @@ stringData:
 ```
 
 ### 3. Run development
-Calling `make` in main directory will start everything including kubernetes cluster using Docker Desktop.
+a. Open Docker Desktop and enable Kubernetes cluster.
+
+b. Calling `make` in main directory will start everything including kubernetes cluster using Docker Desktop.
 
 ### 4. Visit Local Website and Use
 Go to [localhost:80](http://localhost:80)
