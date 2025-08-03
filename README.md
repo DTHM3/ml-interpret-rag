@@ -51,4 +51,4 @@ a. Open Docker Desktop and enable Kubernetes cluster.
 b. Calling `make` in main directory will start everything including kubernetes cluster using Docker Desktop.
 
 ### 4. Visit Local Website and Use
-Go to [localhost:80](http://localhost:80)
+Go to [localhost:80](http://localhost:80) and the app will be ready to use once backend startup is complete (can view in logs).
